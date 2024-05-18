@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intrusion Detection System</title>
+    <style>
+      body {
+        background-color: brown;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: brown;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 10px 0;
+        z-index: 1;
+      }
+
+      .content {
+        margin-top: 100px; /* Ensure the content starts below the fixed header */
+        width: 700px;
+        max-width: 100%;
+      }
+
+      .card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        overflow-y: auto;
+        max-height: 70vh; /* Limit the height of the card to make it scrollable */
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: left;
+      }
+
+      li {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f0f0f0;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+        color: black; /* Set the text color to black */
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const eventSource = new EventSource("/events");
+        const packetList = document.getElementById("packet-list");
+
+        eventSource.onmessage = function (event) {
+          const packet = JSON.parse(event.data);
+          const listItem = document.createElement("li");
+          listItem.textContent = JSON.stringify(packet, null, 4);
+          packetList.appendChild(listItem);
+        };
+
+        document
+          .getElementById("refresh-button")
+          .addEventListener("click", function () {
+            packetList.innerHTML = "";
+          });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Intrusion Detection System</h1>
+      <button id="refresh-button">Refresh</button>
+    </div>
+    <div class="content">
+      <div class="card">
+        <ul id="packet-list"></ul>
+      </div>
+    </div>
+  </body>
+</html>
